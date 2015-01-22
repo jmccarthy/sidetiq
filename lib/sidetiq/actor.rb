@@ -13,7 +13,7 @@ module Sidetiq
       # Link to Sidekiq::Manager when running in server-mode. In most
       # cases the supervisor is booted before Sidekiq has launched
       # fully, so defer this.
-      if Sidekiq.server?
+      if Sidetiq.enabled?
         after(0.1) { link_to_sidekiq_manager }
       end
     end

@@ -7,7 +7,7 @@ module Sidetiq
       def initialize(*args, &block)
         super
 
-        if Sidekiq.server?
+        if Sidetiq.enabled?
           after(0) do
             debug "Sidetiq::Clock looping ..."
             loop!

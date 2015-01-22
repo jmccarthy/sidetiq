@@ -2,7 +2,7 @@ module Sidetiq
   class Supervisor < Celluloid::SupervisionGroup
     supervise Sidetiq::Actor::Clock, as: :sidetiq_clock
 
-    if Sidekiq.server?
+    if Sidetiq.enabled?
       if handler_pool_size = Sidetiq.config.handler_pool_size
         pool Sidetiq::Actor::Handler,
              as: :sidetiq_handler,
