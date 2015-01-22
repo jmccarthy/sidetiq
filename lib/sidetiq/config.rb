@@ -29,6 +29,7 @@ module Sidetiq
     config.lock_expire = 1000
     config.utc = false
     config.handler_pool_size = nil
+    config.enabled = true
   end
 end
 
