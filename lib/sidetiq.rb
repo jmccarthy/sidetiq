@@ -59,12 +59,8 @@ module Sidetiq
   def handler
     Sidetiq::Supervisor.handler
   end
-
-  def enabled?
-    config.enabled
-  end
 end
 
-if Sidekiq.server? && Sidetiq.enabled?
+if Sidetiq.enabled?
   Sidetiq::Supervisor.run!
 end

@@ -21,6 +21,10 @@ module Sidetiq
     def config
       @config ||= OpenStruct.new
     end
+
+    def enabled?
+      Sidekiq.server? && config.enabled
+    end
   end
 
   configure do |config|
