@@ -46,7 +46,11 @@ module Sidetiq
           old_description = get_schedulable_key("schedule_description")
           if old_description != schedule.to_s
             get_schedulable_keys.map do |key|
-              Sidekiq.redis_pool.with { |r| r.del(key) }
+              if Sidekiq.responds_to? :redis_pool
+                Sidekiq.redis_pool.with { |r| r.del(key) }
+              else
+                Sidekiq.redis { |redis| redis }.del(key)
+              end
             end
             set_schedulable_key("schedule_description", schedule.to_s)
           end
@@ -60,11 +64,19 @@ module Sidetiq
       end
 
       def get_schedulable_key(key)
-        Sidekiq.redis_pool.with { |r| r.get("sidetiq:#{name}:#{key}") }
+        if Sidekiq.responds_to? :redis_pool
+          Sidekiq.redis_pool.with { |r| r.get("sidetiq:#{name}:#{key}") }
+        else
+          Sidekiq.redis { |redis| redis }.get("sidetiq:#{name}:#{key}")
+        end
       end
 
       def set_schedulable_key(key, value)
-        Sidekiq.redis_pool.with { |r| r.set("sidetiq:#{name}:#{key}", value) }
+        if Sidekiq.responds_to? :redis_pool
+          Sidekiq.redis_pool.with { |r| r.set("sidetiq:#{name}:#{key}", value) }
+        else
+          Sidekiq.redis { |redis| redis }.set("sidetiq:#{name}:#{key}", value)
+        end
       end
 
       def get_timestamp(key)
